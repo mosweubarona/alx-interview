@@ -1,39 +1,44 @@
 #!/usr/bin/python3
 """
-Log parsing
+Log Parsing
 """
-
 import sys
 
-if __name__ == '__main__':
 
-    filesize, count = 0, 0
-    codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
-    stats = {k: 0 for k in codes}
+total_file_size = 0
+status = ['200', '301', '400', '401', '403', '404', '405', '500']
+obj = dict.fromkeys(status, 0)
 
-    def print_stats(stats: dict, file_size: int) -> None:
-        print("File size: {:d}".format(filesize))
-        for k, v in sorted(stats.items()):
-            if v:
-                print("{}: {}".format(k, v))
 
+def printLogStat():
+    """
+    log stats
+    """
+    print("File size: {}".format(total_file_size))
+    for key, value in sorted(obj.items()):
+        if value > 0:
+            print("{}: {}".format(key, value))
+
+
+if __name__ == "__main__":
+    count_stat = 0
     try:
         for line in sys.stdin:
-            count += 1
-            data = line.split()
+            line = line.split()
+            count_stat += 1
             try:
-                status_code = data[-2]
-                if status_code in stats:
-                    stats[status_code] += 1
-            except BaseException:
+                total_file_size += int(line[-1])
+
+                if line[-2] in status:
+                    obj[line[-2]] += 1
+
+            except (IndexError, ValueError):
                 pass
-            try:
-                filesize += int(data[-1])
-            except BaseException:
-                pass
-            if count % 10 == 0:
-                print_stats(stats, filesize)
-        print_stats(stats, filesize)
+
+            if count_stat % 10 == 0:
+                printLogStat()
     except KeyboardInterrupt:
-        print_stats(stats, filesize)
+        printLogStat()
         raise
+    else:
+        printLogStat()
