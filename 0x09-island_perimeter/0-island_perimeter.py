@@ -1,25 +1,51 @@
 #!/usr/bin/python3
+"""
+This module contains the island_perimeter function which calculates
+the perimeter of the island described in a grid.
+"""
+
+
 def island_perimeter(grid):
-    # initialize perimeter to 0
-    perimeter = 0
+    """
+    Calculates the perimeter of the island described in grid.
 
-    # loop over the rows and columns of the grid
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            # if the cell is land, add its perimeter to the overall perimeter
-            if grid[i][j] == 1:
-                # check left neighbor
-                if j == 0 or grid[i][j-1] == 0:
-                    perimeter += 1
-                # check right neighbor
-                if j == len(grid[0])-1 or grid[i][j+1] == 0:
-                    perimeter += 1
-                # check top neighbor
-                if i == 0 or grid[i-1][j] == 0:
-                    perimeter += 1
-                # check bottom neighbor
-                if i == len(grid)-1 or grid[i+1][j] == 0:
-                    perimeter += 1
+    Args:
+    - grid: a list of list of integers representing an island n water
 
-    # return the overall perimeter
-    return perimeter
+    Returns:
+    - The perimeter of the island (an integer).
+
+    Constraints:
+    - The input grid is rectangular, with its width and height not >100.
+    - The grid is completely surrounded by water.
+    - There is only one island (or nothing).
+    - The island doesn’t have “lakes” (water inside that isn’t connected.
+    - Cells are connected horizontally/vertically (not diagonally).
+    - Each cell is square, with a side length of 1.
+    """
+
+    # get the number of rows and columns in the grid
+    rows = len(grid)
+    cols = len(grid[0])
+
+    # initialize the total perimeter to 0
+    total_perimeter = 0
+
+    # loop through each cell in the grid
+    for r in range(rows):
+        for c in range(cols):
+
+            # if the cell contains a land, add 4 to the perimeter
+            if grid[r][c] == 1:
+                total_perimeter += 4
+
+                # if the cell to the left also contains land, subtract 2
+                if c > 0 and grid[r][c-1] == 1:
+                    total_perimeter -= 2
+
+                # if the cell above also contains land, subtract 2
+                if r > 0 and grid[r-1][c] == 1:
+                    total_perimeter -= 2
+
+    # return the total perimeter
+    return total_perimeter
